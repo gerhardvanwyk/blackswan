@@ -1,15 +1,36 @@
 package org.wyk.swan.model;
 
-import org.springframework.context.annotation.Primary;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 
 import javax.persistence.Entity;
-import javax.persistence.Id;
 import javax.persistence.NamedQuery;
+import javax.persistence.Transient;
+import java.time.LocalDateTime;
 
 @Entity
 @NamedQuery(name = "default", query = "")
+@Data
 public class Task extends AbstractPersistable<Long> {
+
+    @JsonIgnore
+    private Long userId;
+
+    @JsonProperty
+    private String name;
+
+    @JsonProperty
+    private String description;
+
+    @JsonProperty("date_time")
+    private LocalDateTime dateTime;
+
+    @Transient
+    @JsonProperty
+    private String message;
+
 
     public Task() {
         this(null);
