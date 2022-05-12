@@ -6,7 +6,6 @@ import lombok.Data;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 
 import javax.persistence.Entity;
-import javax.persistence.NamedQuery;
 import javax.persistence.Transient;
 import java.time.LocalDateTime;
 
@@ -28,7 +27,7 @@ public class Task extends AbstractPersistable<Long> {
 
     @Transient
     @JsonProperty
-    private String message;
+    private String error;
 
 
     public Task() {

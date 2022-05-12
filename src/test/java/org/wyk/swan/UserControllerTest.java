@@ -65,11 +65,10 @@ public class UserControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
                 .andReturn();
-//                .andExpect()
-//                .andExpect(jsonPath("$[0].name", is(alex.getName())));
 
         Assertions.assertEquals("", res.getResponse().getContentAsString());
-
+        String loc = res.getResponse().getHeader("Location");
+        Assertions.assertEquals("http://localhost/user/14", loc);
     }
 
     @Test
@@ -92,10 +91,9 @@ public class UserControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
                 .andReturn();
-//                .andExpect()
-//                .andExpect(jsonPath("$[0].name", is(alex.getName())));
 
         Assertions.assertEquals("", res.getResponse().getContentAsString());
-
     }
+
+
 }

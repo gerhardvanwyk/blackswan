@@ -24,7 +24,7 @@ public class User extends AbstractPersistable<Long> {
 
      @Transient
      @JsonProperty
-     private String message;
+     private String error;
 
      public User(){
      }

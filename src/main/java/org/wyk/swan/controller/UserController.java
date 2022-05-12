@@ -33,7 +33,7 @@ public class UserController {
             return ResponseEntity.ok(usOp.get());
         }else {
             User usr = new User();
-            usr.setMessage("User " + id + " not found");
+            usr.setError("User " + id + " not found");
             logger.warn("Could not find the user {}", id);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(usr);
         }
@@ -65,7 +65,7 @@ public class UserController {
     @PutMapping(path = "/",  consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE )
     public ResponseEntity<User> update(@RequestBody User user){
         if(user.getId() == null){
-            user.setMessage("User  Id cannot  be null");
+            user.setError("User  Id cannot  be null");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(user);
         }
         User u = userRepository.save(user);

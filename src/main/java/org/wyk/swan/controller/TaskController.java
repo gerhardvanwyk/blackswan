@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.wyk.swan.model.Task;
 import org.wyk.swan.model.TaskRepository;
-import org.wyk.swan.model.User;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -26,15 +25,15 @@ public class TaskController {
         this.taskRepository = taskRepository;
     }
 
-    @GetMapping(path = "/{user_id}/task/{task_id}")
-    public ResponseEntity<Task> get(@PathVariable Long user_id, @PathVariable Long task_id){
-       final Optional<Task> opTsk =  this.taskRepository.findTaskByIdAndUserId(user_id, task_id);
+    @GetMapping(path = "/{user_id}/task/{id}")
+    public ResponseEntity<Task> get(@PathVariable Long user_id, @PathVariable Long id){
+       final Optional<Task> opTsk =  this.taskRepository.findTaskByIdAndUserId(user_id, id);
        if(opTsk.isPresent()){
            return ResponseEntity.ok(opTsk.get());
        }else {
            Task tsk = new Task();
-           tsk.setMessage("Could not find task " + task_id + " for user " + user_id);
-           logger.warn("Could not find task {} for user {}", task_id, user_id)
+           tsk.setError("Could not find task " + id + " for user " + user_id);
+           logger.warn("Could not find task {} for user {}", id, user_id);
            return new ResponseEntity<>(tsk, HttpStatus.NOT_FOUND);
        }
     }
@@ -63,7 +62,7 @@ public class TaskController {
     public ResponseEntity<Task> update(@RequestBody Task task){
         if(task.getId() == null){
             Task tsk = new Task();
-            tsk.setMessage("User  Id cannot  be null");
+            tsk.setError("User  Id cannot  be null");
             logger.warn("Cannot update a new Task");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(tsk);
         }
@@ -72,16 +71,19 @@ public class TaskController {
         return ResponseEntity.ok(result);
     }
 
-    @DeleteMapping(path = "/{user_id}/{task/{id}")
-    public ResponseEntity<Task> delete(@PathVariable Long userId, @PathVariable Long id){
-        Optional<Task> tsk = this.taskRepository.findTaskByIdAndUserId(userId, id);
+    @DeleteMapping(path = "/{user_id}/task/{id}")
+    public ResponseEntity<Task> delete(@PathVariable Long user_id, @PathVariable Long id){
+        Optional<Task> tsk = this.taskRepository.findTaskByIdAndUserId(user_id, id);
         if(tsk.isPresent()) {
             this.taskRepository.delete(tsk.get());
-            tsk.get().setMessage("Task deleted");
-            logger.debug("Task {} deleted for user {}", id, userId);
+            tsk.get().setError("Task deleted");
+            logger.debug("Task {} deleted for user {}", id, user_id);
             return ResponseEntity.ok(tsk.get());
         }else {
-            return new ResponseEntity("{\"msg\":\"Task " + id + " not found for user " + userId + "\"", HttpStatus.NOT_FOUND  );
+            Task del = new Task(id);
+            del.setError("Could not find task to delete");
+            del.setUserId(user_id);
+            return new ResponseEntity<>(del, HttpStatus.NOT_FOUND  );
         }
     }
 }
