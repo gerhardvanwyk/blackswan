@@ -21,7 +21,6 @@ public class UserController {
 
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
     private final UserRepository userRepository;
-
     public UserController(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
@@ -35,6 +34,7 @@ public class UserController {
         }else {
             User usr = new User();
             usr.setMessage("User " + id + " not found");
+            logger.warn("Could not find the user {}", id);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(usr);
         }
     }
@@ -43,6 +43,11 @@ public class UserController {
     public ResponseEntity<List<User>> getAll(){
         List<User> users = new ArrayList();
         userRepository.findAll().forEach(users::add);
+        if(users.isEmpty()){
+            logger.warn("No users found in the system");
+        }else{
+            logger.debug("Found {} users", users.size());
+        }
         return ResponseEntity.ok(users);
     }
 
@@ -53,6 +58,7 @@ public class UserController {
                 .path("/{id}")
                 .buildAndExpand(u.getId())
                 .toUri();
+        logger.debug("User created {}", u.getId());
         return ResponseEntity.created(location).build();
     }
 
@@ -63,6 +69,7 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(user);
         }
         User u = userRepository.save(user);
+        logger.debug("Updated user {}", user.getId());
         return ResponseEntity.ok(u);
     }
 

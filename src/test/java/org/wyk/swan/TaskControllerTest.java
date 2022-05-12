@@ -15,7 +15,4 @@ public class TaskControllerTest {
     @InjectMocks
     TaskController  taskController;
 
-    @Mock
-    TaskRepository repository;
-
 }

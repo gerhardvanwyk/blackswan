@@ -11,7 +11,6 @@ import javax.persistence.Transient;
 import java.time.LocalDateTime;
 
 @Entity
-@NamedQuery(name = "default", query = "")
 @Data
 public class Task extends AbstractPersistable<Long> {
 
