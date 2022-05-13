@@ -25,7 +25,7 @@ public class UserController {
         this.userRepository = userRepository;
     }
 
-    @GetMapping(path="/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE )
+    @GetMapping(path="/{id}", produces = MediaType.APPLICATION_JSON_VALUE )
     public ResponseEntity<User> get(@PathVariable Long id){
 
         Optional<User> usOp = userRepository.findById(id);
