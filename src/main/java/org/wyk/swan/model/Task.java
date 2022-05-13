@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Transient;
 import java.time.LocalDateTime;
@@ -14,15 +15,19 @@ import java.time.LocalDateTime;
 public class Task extends AbstractPersistable<Long> {
 
     @JsonIgnore
+    @Column(name = "userId")
     private Long userId;
 
     @JsonProperty
+    @Column(name = "name")
     private String name;
 
     @JsonProperty
+    @Column(name = "description", length=510)
     private String description;
 
     @JsonProperty("date_time")
+    @Column(name = "date_time" )
     private LocalDateTime dateTime;
 
     @Transient

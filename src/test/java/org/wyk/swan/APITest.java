@@ -29,11 +29,11 @@ public class APITest {
         User user = new User();
         user.setUsername("userdoe");
 
-       MvcResult res = mvc.perform(post("/api/user/")
+        MvcResult res = mvc.perform(post("/user/")
                         .content(mapper.writeValueAsBytes(user))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
-               .andExpect(content().string(""))
+                .andExpect(content().string(""))
                 .andReturn();
         user.setLastName("Doe");
         user.setFirstName("Joe");
