@@ -3,6 +3,7 @@ package org.wyk.swan.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -46,13 +47,13 @@ public class TaskController {
         return ResponseEntity.ok(tasks);
     }
 
-    @PostMapping(path = "/{user_id}/task")
+    @PostMapping(path = "/{user_id}/task", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE )
     public ResponseEntity<Task> create(@PathVariable Long user_id, @RequestBody Task task){
         task.setUserId(user_id);
         final Task tks  = this.taskRepository.save(task);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
-                .path("/{user_id}/task/{task_id}")
-                .buildAndExpand(user_id, tks.getId())
+                .path("/{task_id}")
+                .buildAndExpand(tks.getId())
                 .toUri();
         logger.debug("Task {} created for user {}", tks.getId(), user_id);
         return ResponseEntity.created(location).build();

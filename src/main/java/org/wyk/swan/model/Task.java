@@ -1,5 +1,6 @@
 package org.wyk.swan.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
@@ -27,13 +28,13 @@ public class Task extends AbstractPersistable<Long> {
     private String description;
 
     @JsonProperty("date_time")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "date_time" )
     private LocalDateTime dateTime;
 
     @Transient
     @JsonProperty
     private String error;
-
 
     public Task() {
         this(null);
