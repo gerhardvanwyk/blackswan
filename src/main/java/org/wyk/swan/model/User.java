@@ -1,5 +1,6 @@
 package org.wyk.swan.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
@@ -30,6 +31,13 @@ public class User extends AbstractPersistable<Long> {
      @Transient
      @JsonProperty
      private String error;
+
+     @JsonIgnore
+     @Transient // DATAJPA-622
+     @Override
+     public boolean isNew() {
+         return super.isNew();
+     }
 
      public User(){
      }

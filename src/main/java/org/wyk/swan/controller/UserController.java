@@ -54,7 +54,7 @@ public class UserController {
                 .buildAndExpand(u.getId())
                 .toUri();
         logger.debug("User created {}", u.getId());
-        return ResponseEntity.created(location).build();
+        return ResponseEntity.created(location).body(u);
     }
     @PutMapping(path = "/",  consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE )
     public ResponseEntity<User> update(@RequestBody User user){

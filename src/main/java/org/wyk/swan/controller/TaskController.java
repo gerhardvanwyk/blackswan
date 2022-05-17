@@ -1,7 +1,9 @@
 package org.wyk.swan.controller;
 
+import org.hibernate.query.criteria.internal.predicate.PredicateImplementor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +12,11 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.wyk.swan.model.Task;
 import org.wyk.swan.model.TaskRepository;
 
+import javax.persistence.EntityManager;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,8 +29,11 @@ public class TaskController {
     private static final Logger logger = LoggerFactory.getLogger(TaskController.class);
     private final TaskRepository taskRepository;
 
-    public TaskController(TaskRepository taskRepository) {
+    private final EntityManager entityManager;
+
+    public TaskController(TaskRepository taskRepository, EntityManager entityManager) {
         this.taskRepository = taskRepository;
+        this.entityManager = entityManager;
     }
 
     @GetMapping(path = "/{user_id}/task/{id}")
@@ -42,7 +52,14 @@ public class TaskController {
     @GetMapping(path = "/{user_id}/task")
     public ResponseEntity<List<Task>> getAll(@PathVariable Long user_id){
         final List<Task> tasks = new ArrayList<>();
-        taskRepository.findTaskByUserId(user_id).forEach(tasks::add);
+
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Task> criteriaQuery = criteriaBuilder.createQuery(Task.class);
+        Root<Task> itemRoot = criteriaQuery.from(Task.class);
+        Predicate userIdEquals
+                = criteriaBuilder.equal(itemRoot.get("user_id"), user_id);
+        criteriaQuery.where(userIdEquals);
+        tasks.addAll(entityManager.createQuery(criteriaQuery).getResultList());
         logger.debug("Found {} task for user {}", tasks.size(), user_id);
         return ResponseEntity.ok(tasks);
     }
@@ -56,7 +73,7 @@ public class TaskController {
                 .buildAndExpand(tks.getId())
                 .toUri();
         logger.debug("Task {} created for user {}", tks.getId(), user_id);
-        return ResponseEntity.created(location).build();
+        return ResponseEntity.created(location).body(tks);
     }
 
     @PutMapping(path = "/{user_id}/task")

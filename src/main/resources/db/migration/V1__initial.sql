@@ -10,7 +10,7 @@ CREATE TABLE User_(
 
 CREATE TABLE Task(
      id long primary key,
-     user_id long unique,
+     user_id long,
      name varchar(255),
      description varchar(510),
      date_time timestamp

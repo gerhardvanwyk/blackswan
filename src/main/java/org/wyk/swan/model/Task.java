@@ -36,6 +36,13 @@ public class Task extends AbstractPersistable<Long> {
     @JsonProperty
     private String error;
 
+    @JsonIgnore
+    @Transient // DATAJPA-622
+    @Override
+    public boolean isNew() {
+        return super.isNew();
+    }
+
     public Task() {
         this(null);
     }
