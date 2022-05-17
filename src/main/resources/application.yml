@@ -6,9 +6,6 @@ spring:
     username: sa
     url: jdbc:h2:./db/sbDb;DB_CLOSE_DELAY=1
     driver-class-name: org.h2.Driver
-  mvc:
-    servlet:
-      path: "/api"
   flyway:
     url: jdbc:h2:./db/sbDb;DB_CLOSE_DELAY=1
     password: sa
@@ -24,7 +21,9 @@ spring:
 server:
   port: 8080
   error:
-    include-message: always
-    include-stacktrace: always
-    include-binding-errors: always
+    include-message: never
+    include-stacktrace: never
+    include-binding-errors: never
     include-exception: true
+  servlet:
+    context-path: "/api"

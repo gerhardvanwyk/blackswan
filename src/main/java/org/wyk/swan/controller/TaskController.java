@@ -1,9 +1,7 @@
 package org.wyk.swan.controller;
 
-import org.hibernate.query.criteria.internal.predicate.PredicateImplementor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +26,6 @@ public class TaskController {
 
     private static final Logger logger = LoggerFactory.getLogger(TaskController.class);
     private final TaskRepository taskRepository;
-
     private final EntityManager entityManager;
 
     public TaskController(TaskRepository taskRepository, EntityManager entityManager) {

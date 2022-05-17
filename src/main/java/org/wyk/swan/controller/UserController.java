@@ -24,7 +24,6 @@ public class UserController {
     }
     @GetMapping(path="/{id}", produces = MediaType.APPLICATION_JSON_VALUE )
     public ResponseEntity<User> get(@PathVariable Long id){
-
         Optional<User> usOp = userRepository.findById(id);
         if(usOp.isPresent()){
             return ResponseEntity.ok(usOp.get());
@@ -66,5 +65,4 @@ public class UserController {
         logger.debug("Updated user {}", user.getId());
         return ResponseEntity.ok(u);
     }
-
 }

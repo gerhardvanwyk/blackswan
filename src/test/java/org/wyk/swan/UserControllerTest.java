@@ -9,12 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 import org.wyk.swan.controller.UserController;
 import org.wyk.swan.model.User;
 import org.wyk.swan.model.UserRepository;
@@ -38,9 +35,6 @@ public class UserControllerTest {
 
     @Test
     public void create() throws Exception {
-        MockHttpServletRequest request = new MockHttpServletRequest();
-        RequestContextHolder.setRequestAttributes(new ServletRequestAttributes( request ));
-
         User user1 = new User();
         user1.setFirstName("John");
         user1.setLastName("Doe");
@@ -64,9 +58,6 @@ public class UserControllerTest {
 
     @Test
     public void update() throws Exception {
-        MockHttpServletRequest request = new MockHttpServletRequest();
-        RequestContextHolder.setRequestAttributes(new ServletRequestAttributes( request ));
-
         User user1 = new User();
         user1.setUsername("user1");
         user1.setFirstName("John");

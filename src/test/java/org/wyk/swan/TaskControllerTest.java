@@ -6,9 +6,6 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -21,11 +18,8 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.wyk.swan.controller.TaskController;
-import org.wyk.swan.controller.UserController;
 import org.wyk.swan.model.Task;
 import org.wyk.swan.model.TaskRepository;
-import org.wyk.swan.model.User;
-import org.wyk.swan.model.UserRepository;
 
 import java.time.LocalDateTime;
 
@@ -51,8 +45,6 @@ public class TaskControllerTest {
 
     @Test
     public void create() throws Exception {
-        MockHttpServletRequest request = new MockHttpServletRequest();
-        RequestContextHolder.setRequestAttributes(new ServletRequestAttributes( request ));
 
         Task tk1 = new Task();
         tk1.setDescription("New task");
@@ -81,9 +73,6 @@ public class TaskControllerTest {
 
     @Test
     public void update() throws Exception {
-        MockHttpServletRequest request = new MockHttpServletRequest();
-        RequestContextHolder.setRequestAttributes(new ServletRequestAttributes( request ));
-
         Task tk1 = new Task();
         tk1.setDescription("New task");
         tk1.setName("new");

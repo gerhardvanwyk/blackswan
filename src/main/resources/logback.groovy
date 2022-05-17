@@ -71,13 +71,9 @@ asyncAppender.start()
 
 logger("org.wyk.swan", Level.TRACE)
 
-logger("org.keycloak", TRACE)
-
 logger("org.springframework.boot", DEBUG)
 
-logger("org.apache.catalina", DEBUG)
-
-logger("org.springframework.security", TRACE)
+logger("org.eclipse.jetty", DEBUG)
 
 logger("org.springframework.web", DEBUG)
 
