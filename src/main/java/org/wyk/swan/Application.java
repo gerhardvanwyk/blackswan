@@ -9,9 +9,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 //@EnableConfigurationProperties(ServerProperties.class)
 public class Application {
-
     private static Logger logger = LoggerFactory.getLogger(Application.class);
-
     public static void main(String... args){
         logger.info("Starting the Black Swan... Application");
         SpringApplication.run(Application.class, args);

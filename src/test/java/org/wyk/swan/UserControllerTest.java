@@ -68,21 +68,24 @@ public class UserControllerTest {
         RequestContextHolder.setRequestAttributes(new ServletRequestAttributes( request ));
 
         User user1 = new User();
+        user1.setUsername("user1");
         user1.setFirstName("John");
         user1.setLastName("Doe");
 
         User user2 = new  User(14l);
+        user2.setUsername("user1");
         user2.setFirstName(user1.getFirstName());
         user2.setLastName(user1.getLastName());
         when(repository.save(any(User.class))).thenReturn(user2);
 
 
         MvcResult res = mvc.perform(put("/user/")
-                        .content(mapper.writeValueAsBytes(user1))
+                        .content(mapper.writeValueAsBytes(user2))
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isCreated())
+                .andExpect(status().isOk())
                 .andReturn();
 
-        Assertions.assertEquals("", res.getResponse().getContentAsString());
+        Assertions.assertEquals("{\"id\":14,\"username\":\"user1\",\"error\":null,\"new\":false," +
+                "\"first_name\":\"John\",\"last_name\":\"Doe\"}", res.getResponse().getContentAsString());
     }
 }
