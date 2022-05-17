@@ -2,6 +2,7 @@ package org.wyk.swan.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import org.springframework.data.jpa.domain.AbstractPersistable;
@@ -34,6 +35,7 @@ public class Task extends AbstractPersistable<Long> {
 
     @Transient
     @JsonProperty
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private String error;
 
     @JsonIgnore

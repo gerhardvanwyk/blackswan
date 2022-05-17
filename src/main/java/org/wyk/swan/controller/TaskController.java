@@ -128,10 +128,9 @@ public class TaskController {
 
     @DeleteMapping(path = "/{user_id}/task/{id}")
     public ResponseEntity<Task> delete(@PathVariable Long user_id, @PathVariable Long id){
-        Optional<Task> tsk = this.taskRepository.findTaskByIdAndUserId(user_id, id);
+        Optional<Task> tsk = this.taskRepository.findTaskByIdAndUserId(id, user_id);
         if(tsk.isPresent()) {
             this.taskRepository.delete(tsk.get());
-            tsk.get().setError("Task deleted");
             logger.debug("Task {} deleted for user {}", id, user_id);
             return ResponseEntity.ok(tsk.get());
         }else {

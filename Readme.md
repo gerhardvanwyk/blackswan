@@ -33,6 +33,10 @@ If you do not have access to curl, you can use the Postman chrome plugin (or any
 
 ---
 
+#### Data
+- The application use an embedded H2 database
+- The database is populated with User and Task Data
+
 #### Create user
 ```sh
 curl -i -H "Content-Type: application/json" -X POST -d '{"username":"jsmith","first_name" : "John", "last_name" : "Smith"}'http://localhost:8080/api/user
