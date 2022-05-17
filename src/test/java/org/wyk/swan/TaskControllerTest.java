@@ -1,5 +1,6 @@
 package org.wyk.swan;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -8,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureDataJpa;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -30,6 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ExtendWith({MockitoExtension.class, SpringExtension.class})
 @WebMvcTest(TaskController.class)
+@AutoConfigureDataJpa
 public class TaskControllerTest {
 
     private ObjectMapper mapper = new ObjectMapper();
@@ -87,7 +90,7 @@ public class TaskControllerTest {
         when(repository.save(any(Task.class))).thenReturn(mock);
 
 
-        MvcResult res = mvc.perform(post("/user/14/task/")
+        MvcResult res = mvc.perform(post("/user/14/task/123")
                         .content(mapper.writeValueAsBytes(tk1))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
@@ -97,6 +100,13 @@ public class TaskControllerTest {
     }
 
 
+    @Test
+    public void test() throws JsonProcessingException {
+        ObjectMapper map = new ObjectMapper();
+
+        Task task = map.readValue("{\"name\":\"test name\"}", Task.class);
+
+    }
 
 
 }

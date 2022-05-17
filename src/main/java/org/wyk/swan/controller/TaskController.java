@@ -1,7 +1,12 @@
 package org.wyk.swan.controller;
 
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -15,9 +20,13 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.net.URI;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -28,9 +37,12 @@ public class TaskController {
     private final TaskRepository taskRepository;
     private final EntityManager entityManager;
 
-    public TaskController(TaskRepository taskRepository, EntityManager entityManager) {
+    private final ObjectMapper objectMapper;
+
+    public TaskController(TaskRepository taskRepository, EntityManager entityManager, ObjectMapper objectMapper) {
         this.taskRepository = taskRepository;
         this.entityManager = entityManager;
+        this.objectMapper = objectMapper;
     }
 
     @GetMapping(path = "/{user_id}/task/{id}")
@@ -54,7 +66,7 @@ public class TaskController {
         CriteriaQuery<Task> criteriaQuery = criteriaBuilder.createQuery(Task.class);
         Root<Task> itemRoot = criteriaQuery.from(Task.class);
         Predicate userIdEquals
-                = criteriaBuilder.equal(itemRoot.get("user_id"), user_id);
+                = criteriaBuilder.equal(itemRoot.get("userId"), user_id);
         criteriaQuery.where(userIdEquals);
         tasks.addAll(entityManager.createQuery(criteriaQuery).getResultList());
         logger.debug("Found {} task for user {}", tasks.size(), user_id);
@@ -73,17 +85,45 @@ public class TaskController {
         return ResponseEntity.created(location).body(tks);
     }
 
-    @PutMapping(path = "/{user_id}/task")
-    public ResponseEntity<Task> update(@RequestBody Task task){
-        if(task.getId() == null){
+    @PutMapping(path = "/{user_id}/task/{task_id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Task> update(@PathVariable Long user_id, @PathVariable Long task_id, @RequestBody Task req) throws IOException {
+
+
+        final Optional<Task> tskOp = this.taskRepository.findById(task_id);
+
+        if(tskOp.isEmpty()) {
+            return getTaskResponseError("Task  cannot  be found for id ", task_id);
+        }
+
+        if(req.getName() != null)
+            tskOp.get().setName(req.getName());
+
+        if(req.getDescription() != null)
+            tskOp.get().setDescription(req.getDescription());
+
+        if(req.getDateTime() != null)
+            tskOp.get().setDateTime(req.getDateTime());
+
+        logger.debug("taskDetails {}", req);
+
+        if(task_id == null){
             Task tsk = new Task();
-            tsk.setError("User  Id cannot  be null");
-            logger.warn("Cannot update a new Task");
+            tsk.setError("Task Id cannot  be null");
+            logger.warn("Cannot update the Task");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(tsk);
         }
-        final Task result = this.taskRepository.save(task);
-        logger.debug("Task {} updated", task.getId());
+
+        final Task result = this.taskRepository.save(tskOp.get());
+        logger.debug("Task {} for user {} updated", user_id, tskOp.get().getId());
         return ResponseEntity.ok(result);
+    }
+
+    @NotNull
+    private ResponseEntity<Task> getTaskResponseError(String x, Long task_id) {
+        Task tkError = new Task();
+        tkError.setError(x + task_id);
+        logger.warn("Cannot update the Task {}", task_id);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(tkError);
     }
 
     @DeleteMapping(path = "/{user_id}/task/{id}")

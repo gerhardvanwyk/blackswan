@@ -68,6 +68,7 @@ curl -i -H "Content-Type: application/json" -X POST -d '{"name":"My task","descr
 ```
 
 #### Update Task
+On window curl this does not work, you need to use postman or similar
 ```sh
 curl -i -H "Content-Type: application/json" -X PUT -d '{"name":"My updated task"}' http://localhost:8080/api/user/{user_id}/task/{task_id}
 ```
